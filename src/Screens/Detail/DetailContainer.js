@@ -13,11 +13,8 @@ export default class extends React.Component {
   }
 
   getcoinsDetail = async () => {
-    const {
-      location: { pathname }
-    } = this.props;
     try {
-      const { data } = await getcoinsDetail(pathname);
+      const { data } = await getcoinsDetail(this.props.match.params.id);
 
       this.setState({
         data

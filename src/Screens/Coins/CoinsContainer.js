@@ -7,6 +7,7 @@ export default class extends React.Component {
     loading: true,
     coins: []
   };
+
   getCoins = async () => {
     try {
       const { data: coins } = await getCoins();

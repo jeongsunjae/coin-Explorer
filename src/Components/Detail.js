@@ -1,7 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Link, HashRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  Link,
+  HashRouter as Router,
+  Route,
+  withRouter
+} from "react-router-dom";
 import market from "../Screens/Market";
 import CoinExchange from "../Screens/CoinExchange";
 const Container = styled.div`
@@ -33,11 +38,8 @@ const ButtonLink = styled.button`
   border-radius: 10px;
   background-color: white;
   margin-right: 15px;
-  &: hover {
-    background-color: green;
-    color: white;
-    cursor: pointer;
-  }
+  color: ${props => (props.selected ? "white" : "black")};
+  background-color: ${props => (props.selected ? "green" : "white")};
 `;
 
 const Detail = ({
@@ -46,7 +48,8 @@ const Detail = ({
   open_source,
   proof_type,
   org_structure,
-  id
+  id,
+  location: { pathname }
 }) => (
   <Container>
     <Description>{description}</Description>
@@ -64,17 +67,19 @@ const Detail = ({
         Structure : <Rank>{org_structure}</Rank>
       </Item>
       <Item>
+        <Link to={`/coins/${id}/markets`}>
+          <ButtonLink selected={pathname === `/coins/${id}/markets`}>
+            market
+          </ButtonLink>
+        </Link>
+        <Link to={`/coins/${id}/exchanges`}>
+          <ButtonLink selected={pathname === `/coins/${id}/exchanges`}>
+            Exchange
+          </ButtonLink>
+        </Link>
         <Router>
-          <Link to={`/coins/${id}/markets`}>
-            <ButtonLink>market</ButtonLink>
-          </Link>
-          <Link to={`/coins/${id}/exchanges`}>
-            <ButtonLink>Exchange</ButtonLink>
-          </Link>
-          <Switch>
-            <Route path="/coins/:id/markets" exact component={market} />
-            <Route path="/coins/:id/exchanges" exact component={CoinExchange} />
-          </Switch>
+          <Route path="/coins/:id/markets" component={market} />
+          <Route path="/coins/:id/exchanges" component={CoinExchange} />
         </Router>
       </Item>
     </List>
@@ -89,4 +94,4 @@ Detail.propTypes = {
   org_structure: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired
 };
-export default Detail;
+export default withRouter(Detail);
